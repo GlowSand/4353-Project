@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { getProfile, createProfile, updateProfile } from '../services/profileApi';
+import type { ProfileData } from '../services/profileApi';
 
 export default function ProfilePage() {
+  const userId = 'user123';
+  
   const [name, setName] = useState('');
   const [address1, setAddress1] = useState('');
   const [address2, setAddress2] = useState('');
@@ -12,11 +16,48 @@ export default function ProfilePage() {
   const [skills, setSkills] = useState<string[]>([]);
   const [preference, setPreference] = useState('');
   const [availability, setAvailability] = useState<Date[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [profileExists, setProfileExists] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+ 
+  useEffect(() => {
+    loadProfileData();
+  }, []);
+
+  const loadProfileData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getProfile(userId);
+      
+      if (response.success && response.data) {
+        
+        setName(response.data.fullName);
+        setAddress1(response.data.location.address1);
+        setAddress2(response.data.location.address2 || '');
+        setCity(response.data.location.city);
+        setState(response.data.location.state);
+        setZip(response.data.location.zipCode);
+        setSkills(response.data.skills);
+        setPreference(response.data.preferences || '');
+        
+        
+        setAvailability(response.data.availability.map((day: string) => new Date(day)));
+        
+        setProfileExists(true);
+      } else {
+        setProfileExists(false);
+      }
+    } catch (error) {
+      console.error('Error loading profile:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Check required fields
+    
     if (!name.trim()) {
       alert('Please enter your name.');
       return;
@@ -57,7 +98,46 @@ export default function ProfilePage() {
       return;
     }
 
-    alert('Profile saved successfully!');
+    
+    const profileData: ProfileData = {
+      fullName: name,
+      location: {
+        address1: address1,
+        address2: address2 || undefined,
+        city: city,
+        state: state,
+        zipCode: zip
+      },
+      skills: skills,
+      preferences: preference || undefined,
+      availability: availability.map(date => date.toLocaleDateString('en-US', { weekday: 'long' }))
+    };
+
+    setIsLoading(true);
+    try {
+      let response;
+      
+      if (profileExists) {
+        
+        response = await updateProfile(userId, profileData);
+      } else {
+        
+        response = await createProfile(userId, profileData);
+      }
+
+      if (response.success) {
+        alert('Profile saved successfully!');
+        setProfileExists(true);
+      } else {
+        const errorMessage = response.errors?.join('\n') || response.message || 'Failed to save profile';
+        alert('Error saving profile:\n' + errorMessage);
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      alert('An unexpected error occurred while saving the profile.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
 return (
@@ -215,9 +295,10 @@ return (
 
           <button 
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-medium text-lg"
+            disabled={isLoading}
+            className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-medium text-lg disabled:bg-blue-400 disabled:cursor-not-allowed"
           >
-            Save Profile
+            {isLoading ? 'Saving...' : (profileExists ? 'Update Profile' : 'Save Profile')}
           </button>
         </form>
       </div>
