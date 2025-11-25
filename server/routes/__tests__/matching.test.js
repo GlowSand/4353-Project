@@ -24,7 +24,7 @@ vi.mock("@prisma/client", () => {
   return { PrismaClient, prismaMock };
 });
 
-vi.mock("../services/matching.js", () => {
+vi.mock("../../services/matching.js", () => {
   
   const score = vi.fn((v, e) =>
     (e.requiredSkills || []).filter((s) => (v.skills || []).includes(s)).length
@@ -32,16 +32,16 @@ vi.mock("../services/matching.js", () => {
   return { score };
 });
 
-vi.mock("../services/notifications.js", () => {
+vi.mock("../../services/notifications.js", () => {
   const bus = { emit: vi.fn() };
   return { bus };
 });
 
 
 import { prismaMock } from "@prisma/client";
-import { score } from "../services/matching.js";
-import { bus } from "../services/notifications.js";
-import { matching as router } from "./matching.js";
+import { score } from "../../services/matching.js";
+import { bus } from "../../services/notifications.js";
+import { matching as router } from "../matching.js";
 
 function makeApp() {
   const app = express();

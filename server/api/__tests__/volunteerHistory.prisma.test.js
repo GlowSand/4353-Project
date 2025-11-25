@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-vi.mock("../db.js", () => ({
+vi.mock("../../db.js", () => ({
   default: {
     volunteerHistory: {
       findMany: vi.fn(),
@@ -18,26 +18,26 @@ vi.mock("../db.js", () => ({
   },
 }));
 
-vi.mock("../shared.js", () => {
+vi.mock("../../shared.js", () => {
   const PARTICIPATION_STATUSES = ["Registered", "Attended", "No Show"];
   const ensureVolunteerPayload = vi.fn((x) => x);
   const generateId = vi.fn((p) => `${p}_GEN`);
   return { PARTICIPATION_STATUSES, ensureVolunteerPayload, generateId };
 });
 
-import prisma from "../db.js";
+import prisma from "../../db.js";
 import {
   PARTICIPATION_STATUSES,
   ensureVolunteerPayload,
   generateId,
-} from "../shared.js";
+} from "../../shared.js";
 
 import {
   listVolunteerHistory,
   addVolunteerHistory,
   resetVolunteerHistory,
   PARTICIPATION_STATUSES as EXPORTED_STATUSES,
-} from "./volunteerHistory.prisma.js";
+} from "../volunteerHistory.prisma.js";
 
 function historyRow({ feedback = {}, overrides = {} } = {}) {
   return {

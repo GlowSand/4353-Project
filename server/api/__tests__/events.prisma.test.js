@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-vi.mock("../db.js", () => ({
+vi.mock("../../db.js", () => ({
   default: {
     eventDetails: {
       findMany: vi.fn(),
@@ -15,7 +15,7 @@ vi.mock("../db.js", () => ({
   },
 }));
 
-vi.mock("../shared.js", () => {
+vi.mock("../../shared.js", () => {
   const ensureEventPayload = vi.fn((x) => x);
   const EVENT_URGENCY_OPTIONS = ["low", "medium", "high"];
   const generateId = vi.fn(() => "event_gen_id");
@@ -28,13 +28,13 @@ vi.mock("../shared.js", () => {
   };
 });
 
-import prisma from "../db.js";
+import prisma from "../../db.js";
 import {
   ensureEventPayload,
   EVENT_URGENCY_OPTIONS,
   generateId,
   toUniqueSkills,
-} from "../shared.js";
+} from "../../shared.js";
 
 import {
   listEvents,
@@ -43,7 +43,7 @@ import {
   deleteEvent,
   resetEvents,
   EVENT_URGENCY_OPTIONS as EXPORTED_URGENCY,
-} from "./events.prisma.js";
+} from "../events.prisma.js";
 
 function row(overrides = {}) {
   return {

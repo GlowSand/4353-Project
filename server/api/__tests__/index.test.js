@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import express from "express";
 import request from "supertest";
 
-vi.mock("./events.prisma.js", () => {
+vi.mock("../events.prisma.js", () => {
   return {
     listEvents: vi.fn(),
     createEvent: vi.fn(),
@@ -24,7 +24,7 @@ it("POST /api/events/reset -> 500 when resetEvents throws non-Error", async () =
 });
 
 
-vi.mock("./volunteerHistory.prisma.js", () => {
+vi.mock("../volunteerHistory.prisma.js", () => {
   return {
     listVolunteerHistory: vi.fn(),
     addVolunteerHistory: vi.fn(),
@@ -38,13 +38,13 @@ import {
   updateEvent,
   deleteEvent,
   resetEvents,
-} from "./events.prisma.js";
+} from "../events.prisma.js";
 import {
   listVolunteerHistory,
   addVolunteerHistory,
   resetVolunteerHistory,
-} from "./volunteerHistory.prisma.js";
-import apiRouter from "./index.js";
+} from "../volunteerHistory.prisma.js";
+import apiRouter from "../index.js";
 
 function app() {
   const a = express();
