@@ -24,11 +24,11 @@ const hoisted = vi.hoisted(() => {
 });
 
 
-vi.mock("../db.js", () => ({ default: hoisted.prisma }));
-vi.mock("../store.memory.DEAD.js", () => ({ store: hoisted.storeFns }));
+vi.mock("../../db.js", () => ({ default: hoisted.prisma }));
+vi.mock("../../store.memory.DEAD.js", () => ({ store: hoisted.storeFns }));
 
 
-vi.mock("../shared.js", async (orig) => {
+vi.mock("../../shared.js", async (orig) => {
   const actual = await orig();
   return {
     ...actual,
@@ -37,7 +37,7 @@ vi.mock("../shared.js", async (orig) => {
 });
 
 
-import profileRouter from "./profile.js";
+import profileRouter from "../profile.js";
 
 function makeApp() {
   const app = express();

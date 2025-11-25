@@ -15,7 +15,7 @@ vi.mock("@prisma/client", () => {
   return { PrismaClient, prismaMock };
 });
 
-vi.mock("../services/notifications.js", () => {
+vi.mock("../../services/notifications.js", () => {
   const bus = {
     on: vi.fn(),
     off: vi.fn(),
@@ -26,8 +26,8 @@ vi.mock("../services/notifications.js", () => {
 
 
 import { prismaMock } from "@prisma/client";
-import { bus } from "../services/notifications.js";
-import { notifications as router } from "./notifications.js";
+import { bus } from "../../services/notifications.js";
+import { notifications as router } from "../notifications.js";
 
 function makeApp() {
   const app = express();

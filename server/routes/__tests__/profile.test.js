@@ -3,7 +3,7 @@ import request from "supertest";
 import express from "express";
 
 
-vi.mock("../db.js", () => ({
+vi.mock("../../db.js", () => ({
   default: {
     userProfile: {
       findMany: vi.fn(),
@@ -15,12 +15,12 @@ vi.mock("../db.js", () => ({
   },
 }));
 
-vi.mock("../shared.js", () => {
+vi.mock("../../shared.js", () => {
   const toUniqueSkills = vi.fn((arr) => Array.from(new Set(arr)));
   return { toUniqueSkills };
 });
 
-vi.mock("../store.memory.DEAD.js", () => {
+vi.mock("../../store.memory.DEAD.js", () => {
   const store = {
     listProfiles: vi.fn(() => []),
     removeVolunteer: vi.fn(),
@@ -31,9 +31,9 @@ vi.mock("../store.memory.DEAD.js", () => {
 });
 
 
-import prisma from "../db.js";
-import { store as storeMock } from "../store.memory.DEAD.js";
-import profileRouter from "./profile.js";
+import prisma from "../../db.js";
+import { store as storeMock } from "../../store.memory.DEAD.js";
+import profileRouter from "../profile.js";
 
 function makeApp() {
   const app = express();
